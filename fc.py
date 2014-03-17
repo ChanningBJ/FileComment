@@ -9,7 +9,7 @@ class InvalidFileException(Exception):
         
 
 
-class File(object):
+class CFile(object):
     """
     """
     File = 0
@@ -47,8 +47,10 @@ if __name__ == '__main__':
     (options, args) = parser.parse_args()
     try:
         if len(args)==1:
+            commentFile = CFile(args[0])
             print "show comment of file "+ args[0]
         elif len(args)==2:
+            commentFile = CFile(args[0])
             print "add comment: \""+args[1]+"\" on file "+args[0]
         else:
             print "error"
