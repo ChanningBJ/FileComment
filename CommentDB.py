@@ -6,12 +6,15 @@ from tabulate import tabulate
 import shutil
 
 class CommentDB:
-    _data_file_name_perfix = "sample.json"
+    _data_file_name_perfix = ".FileComment.json"
     def __init__(self, path):
         self._path = path
         self._comment_data_filename = os.path.join(self._path,CommentDB._data_file_name_perfix)
-        with open(self._comment_data_filename,"r") as fd:
-            self._comment_data = json.load(fd,encoding="UTF8")
+        if os.path.exists(self._comment_data_filename):
+            with open(self._comment_data_filename,"r") as fd:
+                self._comment_data = json.load(fd,encoding="UTF8")
+        else:
+            self._comment_data = {}
 
     def _getNewVersionNumber(self,):
         fileList = os.listdir(self._path)
