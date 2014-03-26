@@ -20,24 +20,17 @@ class CFile(object):
         """
         if os.path.exists(filename)==False:
             raise InvalidFileException
-        self._path
         if os.path.isfile(filename):
-            self._type = FileType.File
+            self._type = CFile.File
         else:
-            self._type = FileType.Folder
+            self._type = CFile.Folder
                     
     def isFolder(self, ):
-        return self._type==FileType.Folder
+        return self._type==CFile.Folder
 
     def isFile(self,):
-        return self._type==FileType.File
+        return self._type==CFile.File
 
-
-def checkFolderOrFile(path):
-    """
-    Return "File"/"Folder", will return None if the path is not valid
-    """
-    pass
 
 
 if __name__ == '__main__':
@@ -49,6 +42,10 @@ if __name__ == '__main__':
         if len(args)==1:
             commentFile = CFile(args[0])
             print "show comment of file "+ args[0]
+            if options.showFullHistory:
+                print "showing full history"
+            else:
+                print "showing latest comment"
         elif len(args)==2:
             commentFile = CFile(args[0])
             print "add comment: \""+args[1]+"\" on file "+args[0]
