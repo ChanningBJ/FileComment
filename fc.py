@@ -94,7 +94,6 @@ class CommentPrinter:
         commentInfo: [u'sdfsdfsdfsdfsdf today\n\n', datetime.datetime(2014, 3, 31, 13, 38, 24)]
         """
         flag = True
-        print commentInfo[0].split("\n")
         for comment in commentInfo[0].split("\n"):
 #        if len(commentInfo) is not 0 :
             if flag :
@@ -124,12 +123,17 @@ if __name__ == '__main__':
                         action="store_true")
     parser.add_argument("-a", "--add", help="Add new comments to file",
                         action="store_true")
+    parser.add_argument("-m", "--message", nargs=1, help="Working with -a, specify the comment message")
     args = parser.parse_args()
+
     if args.add : # add new comments to file
         if len(args.filename)==0:
             args.filename.append("./")
         for filename in args.filename:
-            commentMessage = editCommentMessage(filename) # get the comment of a file
+            if args.message is not None:
+                commentMessage = args.message[0]
+            else:
+                commentMessage = editCommentMessage(filename) # get the comment of a file
             if commentMessage is "":
                 continue
             commentFile = CFile(filename)
