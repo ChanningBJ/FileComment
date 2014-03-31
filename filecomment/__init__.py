@@ -76,6 +76,8 @@ class CommentPrinter:
         """
         commentInfo: [u'sdfsdfsdfsdfsdf today\n\n', datetime.datetime(2014, 3, 31, 13, 38, 24)]
         """
+        if commentInfo==[]:
+            return
         flag = True
         for comment in commentInfo[0].split("\n"):
             if flag :
@@ -98,7 +100,7 @@ import argparse
 # TODO: The comment of a folder should be in the .FileComment.json file of the patrent folder
 # TODO: Should check if the folder is / , since / will not have a parient folder
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('filename', nargs='*')
     parser.add_argument("-f", "--full", help="Show all comments of a file, will only show the latest by default",
@@ -134,3 +136,7 @@ if __name__ == '__main__':
                 comment = commentDB.getLatestComment(commentFile.basename)
                 commentPrinter.addComment(filename,comment)
         commentPrinter.printTable()
+
+
+if __name__ == '__main__':
+    main()
