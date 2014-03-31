@@ -69,12 +69,19 @@ def editCommentMessage(filename):
         tmpfile.write(initial_message)
         tmpfile.flush()
         call([EDITOR, tmpfile.name])
+        isEmpty = True
         with open(tmpfile.name) as fd:
             for line in fd.readlines():
                 tmp = line.lstrip()
-                if len(tmp) is 0 or tmp[0] is not "#":
-                    ret = ret+line
-    return ret
+                if len(tmp) is not 0 and tmp[0] is not "#":
+                        ret = ret+line
+                        isEmpty = False
+                # if len(tmp) is 0 or tmp[0] is not "#":
+                #     ret = ret+line
+    if isEmpty is True:
+        return ""
+    else:
+        return ret
 
 from tabulate import tabulate
 
@@ -86,8 +93,15 @@ class CommentPrinter:
         """
         commentInfo: [u'sdfsdfsdfsdfsdf today\n\n', datetime.datetime(2014, 3, 31, 13, 38, 24)]
         """
-        if len(commentInfo) is not 0 :
-            self._comment.append([filename,commentInfo[0],str(commentInfo[1])])
+        flag = True
+        print commentInfo[0].split("\n")
+        for comment in commentInfo[0].split("\n"):
+#        if len(commentInfo) is not 0 :
+            if flag :
+                self._comment.append([filename,comment,str(commentInfo[1])])
+                flag = False
+            elif comment!="":
+                self._comment.append(["",comment,""])
 
     def addCommentList(self, filename, commentInfoList):
         if commentInfoList is not []:
@@ -116,22 +130,24 @@ if __name__ == '__main__':
             args.filename.append("./")
         for filename in args.filename:
             commentMessage = editCommentMessage(filename) # get the comment of a file
+            if commentMessage is "":
+                continue
             commentFile = CFile(filename)
             commentDB = CommentDB.CommentDB(commentFile.dirname)
             commentDB.addComment(commentFile.basename,commentMessage)
             print "Comment message saved for file "+filename
     else: # show comments of files
+        commentPrinter = CommentPrinter()
         for filename in args.filename:
             commentFile = CFile(filename)
             commentDB = CommentDB.CommentDB(commentFile.dirname)
-            commentPrinter = CommentPrinter()
             if args.full: # show all comments
                 comments = commentDB.getAllComment(commentFile.basename)
                 commentPrinter.addCommentList(filename,comments)
             else:
                 comment = commentDB.getLatestComment(commentFile.basename)
                 commentPrinter.addComment(filename,comment)
-            commentPrinter.printTable()
+        commentPrinter.printTable()
         
     
     
