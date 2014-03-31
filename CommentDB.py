@@ -53,7 +53,7 @@ class CommentDB:
         return ret
 
     def addComment(self,filename,comment_string):
-        if os.path.exists(CommentDB._data_file_name_perfix):
+        if os.path.exists(self._comment_data_filename):
             newFileName = self._comment_data_filename+"."+self._getNewVersionNumber()
             shutil.copy(self._comment_data_filename,newFileName)
         comment = {}
@@ -64,7 +64,7 @@ class CommentDB:
             self._comment_data[filename].append(comment)
         else:
             self._comment_data[filename] = [comment]
-        with open(os.path.join(self._path,CommentDB._data_file_name_perfix),"w") as fd:
+        with open(self._comment_data_filename,"w") as fd:
             json.dump(self._comment_data,fd,encoding="UTF8")
         
 
@@ -82,21 +82,27 @@ class UT_CommentDB(unittest.TestCase):
             ["The comment data 2",datetime.datetime.strptime("2012-04-03 05:23:11","%Y-%m-%d %H:%M:%S")]
         ]
         self.assertEqual(ret,result)
+
     def test_getAllComment_NEG(self,):
         ret = self._comment_db.getAllComment("none")
         self.assertEqual(ret,[])
+
     def test_getLatestComment_POS(self,):
         ret = self._comment_db.getLatestComment("fileName1")
         result = ["The comment data",datetime.datetime.strptime("2012-04-08 04:23:11","%Y-%m-%d %H:%M:%S")]
         self.assertEqual(ret,result)
+
     def test_getLatestComment_NEG(self,):
         ret = self._comment_db.getLatestComment("none")
         self.assertEqual(ret,[])
+        
     def test_addComment(self,):
         self._comment_db.addComment("newfile","12345")
         cm = self._comment_db.getLatestComment("newfile")
         self.assertEqual(cm[0],"12345")
 
+
+        
 if __name__ == '__main__':
     comment_db = CommentDB("/home/chengming/workspace/github/pfcomment")
     comment_db.addComment("aaa","1234567")
