@@ -38,21 +38,6 @@ class CFile(object):
     def isFile(self,):
         return self._type==CFile.File
 
-        
-# import sys, tempfile, os
-# from subprocess import call
-# def getNewComment(filename):
-#     EDITOR = os.environ.get('EDITOR','vim') #that easy!
-#     initial_message = "\n\n#Comments for file "+filename # if you want to set up the file somehow
-#     with tempfile.NamedTemporaryFile(suffix=".tmp") as tempfile:
-#         tempfile.write(initial_message)
-#         tempfile.flush()
-#         call([EDITOR, tempfile.name])
-#         ret = ""
-#         with open(tempfile.name) as fd:
-#             for line in fd.readlines():
-#                 ret = ret+line
-#     return ret
 
 import sys, tempfile, os
 from subprocess import call
@@ -76,8 +61,6 @@ def editCommentMessage(filename):
                 if len(tmp) is not 0 and tmp[0] is not "#":
                         ret = ret+line
                         isEmpty = False
-                # if len(tmp) is 0 or tmp[0] is not "#":
-                #     ret = ret+line
     if isEmpty is True:
         return ""
     else:
@@ -95,7 +78,6 @@ class CommentPrinter:
         """
         flag = True
         for comment in commentInfo[0].split("\n"):
-#        if len(commentInfo) is not 0 :
             if flag :
                 self._comment.append([filename,comment,str(commentInfo[1])])
                 flag = False
@@ -152,34 +134,3 @@ if __name__ == '__main__':
                 comment = commentDB.getLatestComment(commentFile.basename)
                 commentPrinter.addComment(filename,comment)
         commentPrinter.printTable()
-        
-    
-    
-    # parser = OptionParser(usage="Usage: %prog [options] [file name] [comment message]", version="%prog v1.0")
-    # parser.add_option("-f", "--full", action="store_true", dest="showFullHistory", default=False, help="Display all comments history")
-
-    # (options, args) = parser.parse_args()
-    # try:
-    #     if len(args)==1:
-    #         commentFile = CFile(args[0])
-    #         commentDB = CommentDB.CommentDB(commentFile.dirname)
-    #         print "show comment of file "+ args[0]
-    #         if options.showFullHistory:
-    #             print "showing full history"
-    #             print commentDB.getAllComment(commentFile.basename)
-    #         else:
-    #             print "showing latest comment"
-    #             print commentDB.getLatestComment(commentFile.basename)
-    #     elif len(args)==2:
-    #         commentFile = CFile(args[0])
-    #         commentDB = CommentDB.CommentDB(commentFile.dirname)
-    #         print "add comment: \""+args[1]+"\" on file "+args[0]
-    #         commentDB.addComment(commentFile.basename,args[1])
-    #     else:
-    #         print "error"
-    #         print args
-    # except InvalidFileException:
-    #     print "File does not exist"
-
-            
-
