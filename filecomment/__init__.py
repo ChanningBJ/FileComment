@@ -5,7 +5,11 @@ import CommentDB
 class InvalidFileException(Exception):
     """
     """
-    pass
+    def __init__(self, filename):
+        self._filename = filename
+
+    def __str__(self):
+        return self._filename+": No such file or directory"
         
         
 
@@ -20,7 +24,7 @@ class CFile(object):
         """
         """
         if os.path.exists(filename)==False:
-            raise InvalidFileException
+            raise InvalidFileException(filename)
         if os.path.isfile(filename):
             self._type = CFile.File
         else:
@@ -105,33 +109,35 @@ def main():
     parser.add_argument("-m", "--message", nargs=1, help="Working with -a, specify the comment message")
     args = parser.parse_args()
 
-    if args.add : # add new comments to file
-        if len(args.filename)==0:
-            args.filename.append("./")
-        for filename in args.filename:
-            commentFile = CFile(filename)
-            if args.message is not None:
-                commentMessage = args.message[0]
-            else:
-                commentMessage = editCommentMessage(filename) # get the comment of a file
-            if commentMessage is "":
-                continue
-            commentDB = CommentDB.CommentDB(commentFile.dirname)
-            commentDB.addComment(commentFile.basename,commentMessage)
-            print "Comment message saved for file "+filename
-    else: # show comments of files
-        commentPrinter = CommentPrinter()
-        for filename in args.filename:
-            commentFile = CFile(filename)
-            commentDB = CommentDB.CommentDB(commentFile.dirname)
-            if args.full: # show all comments
-                comments = commentDB.getAllComment(commentFile.basename)
-                commentPrinter.addCommentList(filename,comments)
-            else:
-                comment = commentDB.getLatestComment(commentFile.basename)
-                commentPrinter.addComment(filename,comment)
-        commentPrinter.printTable()
-
+    try:
+        if args.add : # add new comments to file
+            if len(args.filename)==0:
+                args.filename.append("./")
+            for filename in args.filename:
+                commentFile = CFile(filename)
+                if args.message is not None:
+                    commentMessage = args.message[0]
+                else:
+                    commentMessage = editCommentMessage(filename) # get the comment of a file
+                if commentMessage is "":
+                    continue
+                commentDB = CommentDB.CommentDB(commentFile.dirname)
+                commentDB.addComment(commentFile.basename,commentMessage)
+                print "Comment message saved for file "+filename
+        else: # show comments of files
+            commentPrinter = CommentPrinter()
+            for filename in args.filename:
+                commentFile = CFile(filename)
+                commentDB = CommentDB.CommentDB(commentFile.dirname)
+                if args.full: # show all comments
+                    comments = commentDB.getAllComment(commentFile.basename)
+                    commentPrinter.addCommentList(filename,comments)
+                else:
+                    comment = commentDB.getLatestComment(commentFile.basename)
+                    commentPrinter.addComment(filename,comment)
+            commentPrinter.printTable()
+    except Exception as e:
+        print e
 
 if __name__ == '__main__':
     main()
