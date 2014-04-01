@@ -2,7 +2,6 @@ import json
 import datetime
 import unittest
 import os
-from tabulate import tabulate
 import shutil
 
 class CommentDB:

@@ -1,4 +1,4 @@
-from optparse import OptionParser
+from argparse import ArgumentParser
 import os
 import CommentDB
 
@@ -94,14 +94,9 @@ class CommentPrinter:
     def printTable(self,):
         print tabulate(self._comment,headers=self._header,tablefmt="orgtbl")
 
-    
-import argparse
-
-# TODO: The comment of a folder should be in the .FileComment.json file of the patrent folder
-# TODO: Should check if the folder is / , since / will not have a parient folder
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = ArgumentParser()
     parser.add_argument('filename', nargs='*')
     parser.add_argument("-f", "--full", help="Show all comments of a file, will only show the latest by default",
                         action="store_true")
