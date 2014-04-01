@@ -14,19 +14,6 @@ class CommentDB:
                 self._comment_data = json.load(fd,encoding="UTF8")
         else:
             self._comment_data = {}
-
-    def _getNewVersionNumber(self,):
-        fileList = os.listdir(self._path)
-        maxVersionNumber = 0
-        for filename in fileList:
-            if filename.find(CommentDB._data_file_name_perfix)==0:
-                try:
-                    versionNumber = int(filename.split(".")[-1])
-                except ValueError:
-                    continue
-                if maxVersionNumber<versionNumber:
-                    maxVersionNumber = versionNumber
-        return str(maxVersionNumber+1)
         
     def getAllComment(self,filename):
         ret = []
@@ -53,7 +40,7 @@ class CommentDB:
 
     def addComment(self,filename,comment_string):
         if os.path.exists(self._comment_data_filename):
-            newFileName = self._comment_data_filename+"."+self._getNewVersionNumber()
+            newFileName = self._comment_data_filename+"~"
             shutil.copy(self._comment_data_filename,newFileName)
         comment = {}
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
