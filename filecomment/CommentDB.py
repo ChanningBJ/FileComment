@@ -4,6 +4,51 @@ import unittest
 import os
 import shutil
 
+
+
+class InvalidFileException(Exception):
+    """
+    """
+    def __init__(self, filename):
+        self._filename = filename
+
+    def __str__(self):
+        return self._filename+": No such file or directory"
+        
+        
+
+
+class CFile(object):
+    """
+    """
+    File = 0
+    Folder = 1
+    
+    def __init__(self, filename):
+        """
+        """
+        if os.path.exists(filename)==False:
+            raise InvalidFileException(filename)
+        if os.path.isfile(filename):
+            self._type = CFile.File
+        else:
+            self._type = CFile.Folder
+        # the abslute path name 
+        self.abspath = os.path.abspath(filename)
+        # the basename
+        self.basename = os.path.basename(self.abspath)
+        # the abslute path name of parient folder
+        self.dirname = os.path.dirname(self.abspath)
+                    
+    def isFolder(self, ):
+        return self._type==CFile.Folder
+
+    def isFile(self,):
+        return self._type==CFile.File
+
+
+
+
 class CommentDB:
     _data_file_name_perfix = ".FileComment.json"
     def __init__(self, path):
