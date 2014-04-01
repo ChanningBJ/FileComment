@@ -109,13 +109,13 @@ def main():
         if len(args.filename)==0:
             args.filename.append("./")
         for filename in args.filename:
+            commentFile = CFile(filename)
             if args.message is not None:
                 commentMessage = args.message[0]
             else:
                 commentMessage = editCommentMessage(filename) # get the comment of a file
             if commentMessage is "":
                 continue
-            commentFile = CFile(filename)
             commentDB = CommentDB.CommentDB(commentFile.dirname)
             commentDB.addComment(commentFile.basename,commentMessage)
             print "Comment message saved for file "+filename
